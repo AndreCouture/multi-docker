@@ -3,22 +3,36 @@ services:
     - docker
 
 before_install:
-    - docker build -t andrecouture/multi-docker -f Dockerfile.dev .  
+    - docker build -t andrecouture/react-test -f ./client/Dockerfile.dev ./client
 
 script:
-    - docker run -e CI=true andrecouture/multi-docker npm run test -- --coverage
+    - docker run -e CI=true andrecouture/react-test npm test -- --coverage
 
-deploy:
-    edge: true
-    provider: elasticbeanstalk
-    region: "us-east-1"
-    app: "multi-docker"
-    env: "DockerReact-env"
-    bucket_name: "elasticbeanstalk-us-east-1-431028908195"
-    bucket_path: "multi-docker"
-    on:
-        branch: master
+after_success:
+    - docker build -t andrecouture/multi-client ./client
+    - docker build -t andrecouture/multi-worker ./worker
+    - docker build -t andrecouture/multi-server ./server
+    - docker build -t andrecouture/multi-nginx ./nginx
+    # Log in to the docker CLI
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
 
-    access_key_id: $AWS_ACCESS_KEY
-    secret_access_key: $AWS_SECRET_KEY
+    # Take those images and push to docker-hub
+    - docker push andrecouture/multi-client
+    - docker push andrecouture/multi-worker
+    - docker push andrecouture/multi-server
+    - docker push andrecouture/multi-nginx
+
+#deploy:
+#    edge: true
+#    provider: elasticbeanstalk
+#    region: "us-east-1"
+#    app: "multi-docker"
+#    env: "DockerReact-env"
+#    bucket_name: "elasticbeanstalk-us-east-1-431028908195"
+#    bucket_path: "multi-docker"
+#    on:
+#        branch: master
+
+#    access_key_id: $AWS_ACCESS_KEY
+#    secret_access_key: $AWS_SECRET_KEY
     
