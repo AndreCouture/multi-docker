@@ -4,23 +4,27 @@
             "name": "client",
             "image": "andrecouture/multi-client",
             "hostname": "client",
+            "memory": 128,
             "essential": false
         },
         {
             "name": "server",
             "image": "andrecouture/multi-server",
             "hostname": "api",
+            "memory": 128,
             "essential": false
         },
         {
             "name": "worker",
             "image": "andrecouture/multi-worker",
             "hostname": "worker",
+            "memory": 128,
             "essential": false
         },
         {
             "name": "nginx",
             "image": "andrecouture/multi-nginx",
+            "memory": 128,
             "essential": true,
             "portMappings": [{
                 "hostPort": 80,
