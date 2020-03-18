@@ -22,17 +22,17 @@ after_success:
     - docker push andrecouture/multi-server
     - docker push andrecouture/multi-nginx
 
-#deploy:
-#    edge: true
-#    provider: elasticbeanstalk
-#    region: "us-east-1"
-#    app: "multi-docker"
-#    env: "DockerReact-env"
-#    bucket_name: "elasticbeanstalk-us-east-1-431028908195"
-#    bucket_path: "multi-docker"
-#    on:
-#        branch: master
+deploy:
+    edge: true
+    provider: elasticbeanstalk
+    region: "us-east-1"
+    app: "multi-docker"
+    env: "MultiDocker-env"
+    bucket_name: "elasticbeanstalk-us-east-1-431028908195"
+    bucket_path: "multi-docker"
+    on:
+        branch: master
 
-#    access_key_id: $AWS_ACCESS_KEY
-#    secret_access_key: $AWS_SECRET_KEY
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
     
