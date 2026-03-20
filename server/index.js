@@ -4,10 +4,19 @@ const keys = require('./keys');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+
+// Rate limiting setup for POST /values
+const valuesPostLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 POST /values requests per windowMs
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
 
 // Postgres Client Setup
 const { Pool } = require('pg');
@@ -51,7 +60,7 @@ app.get('/values/current', async (req, res) => {
   });
 });
 
-app.post('/values', async (req, res) => {
+app.post('/values', valuesPostLimiter, async (req, res) => {
   const index = req.body.index;
 
   if (parseInt(index) > 40) {
